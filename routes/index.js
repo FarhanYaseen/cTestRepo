@@ -7,17 +7,29 @@ const Q = require('q');
 router.get('/I/want/title', function (req, res, next) {
     if (req.query) {
         if (req.query.address === undefined) {
-            return res.send({message: "address cannot be undefined"});
+            return res.render('error', {'message': "address cannot be undefined", error:{
+                status: 400,
+                stack: "Bad Request ./"
+            }});
         }
+        let queryParams  = Object.keys(req.query)
+        if(queryParams.length >=2 ) {
+            return res.render('error', {
+                "message": "query params other than address are not alowed", error :{
+                    status: 400,
+                    stack: "Bad Request ./"
+                }
 
-        /* makeCalls1(req.query.address, function(result){
+            })
+        };
+        makeCalls1(req.query.address, function(result){
             res.render(
                 'index', {
                     "title": "Following are the titles of given websites:",
                     urls: result
                 }
             )
-        });*/
+        });
 
  /*       makeCalls2(req.query.address, function(result){
             res.render(
