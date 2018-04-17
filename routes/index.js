@@ -7,31 +7,24 @@ const Q = require('q');
 router.get('/I/want/title', function (req, res, next) {
     if (req.query) {
         if (req.query.address === undefined) {
-            return res.render('error', {'message': "address cannot be undefined", error:{
-                status: 400,
-                stack: "Bad Request ./"
-            }});
-        }
-        let queryParams  = Object.keys(req.query)
-        if(queryParams.length >=2 ) {
             return res.render('error', {
-                "message": "query params other than address are not alowed", error :{
+                'message': "address cannot be undefined", error: {
+                    status: 400,
+                    stack: "Bad Request ./"
+                }
+            });
+        }
+        let queryParams  = Object.keys(req.query);
+        if (queryParams.length >= 2) {
+            return res.render('error', {
+                "message": "query params other than address are not alowed", error: {
                     status: 400,
                     stack: "Bad Request ./"
                 }
 
-            })
-        };
-        makeCalls1(req.query.address, function(result){
-            res.render(
-                'index', {
-                    "title": "Following are the titles of given websites:",
-                    urls: result
-                }
-            )
-        });
-
- /*       makeCalls2(req.query.address, function(result){
+            });
+        }
+/*        makeCalls1(req.query.address, function (result) {
             res.render(
                 'index', {
                     "title": "Following are the titles of given websites:",
@@ -39,7 +32,16 @@ router.get('/I/want/title', function (req, res, next) {
                 }
             )
         });*/
-  /*      makeCalls3(req.query.address)
+
+        makeCalls2(req.query.address, function(result){
+            res.render(
+                'index', {
+                    "title": "Following are the titles of given websites:",
+                    urls: result
+                }
+            )
+        });
+/*        makeCalls3(req.query.address)
             .then((result) => {
                 return res.render(
                     'index', {
@@ -57,8 +59,8 @@ router.get('/I/want/title', function (req, res, next) {
 function makeCalls2(urls, callback){
     let result = [];
     if (Array.isArray(urls)){
-        async.times(urls.length, function (n, next) {
-            makeRequest(urls[n], function (response) {
+        async.map(urls, function (url, next) {
+            makeRequest(url, function (response) {
                 result.push(response);
                 next(null, result);
             });
